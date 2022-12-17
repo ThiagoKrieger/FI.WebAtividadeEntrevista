@@ -1,34 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FI.AtividadeEntrevista.DAL
 {
     internal class AcessoDados
     {
-        private string stringDeConexao
-        {
-            get
-            {
-                ConnectionStringSettings conn = System.Configuration.ConfigurationManager.ConnectionStrings["BancoDeDados"];
-                if (conn != null)
-                    return conn.ConnectionString;
-                else
-                    return string.Empty;
-            }
-        }
+        private string stringDeConexao => @"Data Source=THIAGO;AttachDbFilename=|DataDirectory|\BancoDeDados.mdf;Integrated Security=True;Initial Catalog=BancoDeDados;Password=mssqlserver;User ID=sa;";
+        // {
+        //     get
+        //     {
+        //         var conn = ConfigurationManager.ConnectionStrings["BancoDeDados"];
+        //         if (conn != null)
+        //             return conn.ConnectionString;
+        //         else
+        //             return string.Empty;
+        //     }
+        // }
 
         internal void Executar(string NomeProcedure, List<SqlParameter> parametros)
         {
-            SqlCommand comando = new SqlCommand();
-            SqlConnection conexao = new SqlConnection(stringDeConexao);
+            var comando = new SqlCommand();
+            var conexao = new SqlConnection(stringDeConexao);
             comando.Connection = conexao;
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            comando.CommandType = CommandType.StoredProcedure;
             comando.CommandText = NomeProcedure;
             foreach (var item in parametros)
                 comando.Parameters.Add(item);
@@ -46,17 +42,17 @@ namespace FI.AtividadeEntrevista.DAL
 
         internal DataSet Consultar(string NomeProcedure, List<SqlParameter> parametros)
         {
-            SqlCommand comando = new SqlCommand();
-            SqlConnection conexao = new SqlConnection(stringDeConexao);
+            var comando = new SqlCommand();
+            var conexao = new SqlConnection(stringDeConexao);
 
             comando.Connection = conexao;
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            comando.CommandType = CommandType.StoredProcedure;
             comando.CommandText = NomeProcedure;
             foreach (var item in parametros)
                 comando.Parameters.Add(item);
 
-            SqlDataAdapter adapter = new SqlDataAdapter(comando);
-            DataSet ds = new DataSet();
+            var adapter = new SqlDataAdapter(comando);
+            var ds = new DataSet();
             conexao.Open();
 
             try

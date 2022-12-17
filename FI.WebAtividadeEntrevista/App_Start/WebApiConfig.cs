@@ -1,4 +1,5 @@
 ﻿using System.Web.Http;
+using FluentValidation.WebApi;
 
 namespace WebAtividadeEntrevista
 {
@@ -10,6 +11,7 @@ namespace WebAtividadeEntrevista
 
             // Web API routes
             config.MapHttpAttributeRoutes();
+            FluentValidationModelValidatorProvider.Configure(config);
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",

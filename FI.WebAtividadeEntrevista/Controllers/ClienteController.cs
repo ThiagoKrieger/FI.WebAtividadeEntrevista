@@ -25,12 +25,16 @@ namespace WebAtividadeEntrevista.Controllers
         public JsonResult Incluir(ClienteModel model)
         {
             var bo = new BoCliente();
-            
-            if (!ModelState.IsValid)
+            var validator = new ClienteValidator();
+            var result = validator.Validate(model);
+
+            if (!ModelState.IsValid || !result.IsValid)
             {
                 var erros = (from item in ModelState.Values
                                       from error in item.Errors
                                       select error.ErrorMessage).ToList();
+                
+                erros.AddRange(result.Errors.Select(failure => failure.ErrorMessage));
 
                 Response.StatusCode = 400;
                 return Json(string.Join(Environment.NewLine, erros));
@@ -41,6 +45,7 @@ namespace WebAtividadeEntrevista.Controllers
                 model.Id = bo.Incluir(new Cliente()
                 {                    
                     CEP = model.CEP,
+                    CPF = model.CPF,
                     Cidade = model.Cidade,
                     Email = model.Email,
                     Estado = model.Estado,
@@ -76,6 +81,7 @@ namespace WebAtividadeEntrevista.Controllers
                 {
                     Id = model.Id,
                     CEP = model.CEP,
+                    CPF = model.CPF,
                     Cidade = model.Cidade,
                     Email = model.Email,
                     Estado = model.Estado,
@@ -103,6 +109,7 @@ namespace WebAtividadeEntrevista.Controllers
                 {
                     Id = cliente.Id,
                     CEP = cliente.CEP,
+                    CPF = cliente.CPF,
                     Cidade = cliente.Cidade,
                     Email = cliente.Email,
                     Estado = cliente.Estado,
